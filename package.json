@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "prepare": "husky install"
   },
   "author": "",
@@ -16,6 +16,7 @@
     "@aws-sdk/lib-storage": "^3.826.0",
     "aws-sdk": "^2.1692.0",
     "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",

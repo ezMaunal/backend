@@ -1,2 +1,9 @@
-node_modules
+# 패키지 매니저
+node_modules/
+**/node_modules/
+
+# 환경 파일
 .env
+.env.*
+**/.env
+**/.env.*
