@@ -9,7 +9,7 @@ const upload = multer({
     s3: s3,
     bucket: env.S3_BUCKET_NAME,
     key: (req, file, cb) => {
-      const filename = `manuals/${uuidv4()}-${file.originalname}`;
+      const filename = `images/${uuidv4()}-${file.originalname}`;
       cb(null, filename);
     },
   }),

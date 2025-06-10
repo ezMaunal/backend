@@ -67,7 +67,7 @@ export const kakaoLogin = async (req, res, next) => {
 
     res.cookie("refreshToken", refresh_token, {
       httpOnly: true,
-      secure: env.NODE_ENV === "production", // 배포 시 true
+      secure: env.NODE_ENV === "production",
       sameSite: "Lax",
       path: "/",
     });
