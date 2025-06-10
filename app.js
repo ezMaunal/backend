@@ -1,25 +1,27 @@
-import env from "./config/env.js";
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
-import uploadRouter from "./routes/upload.js";
+import uploadRouter from "./routes/s3Upload.js";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/user.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 app.use(express.json());
+app.use(cookieParser());
+
 app.use("/api", uploadRouter);
 
-mongoose
-  .connect(env.MONGODB_Atlas_URI)
-  .then(() => {
-    console.log("✅ MongoDB Atlas 연결 성공");
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB 연결 에러:", err);
-  });
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
-const PORT = env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`🚀 서버 실행 중: http://localhost:${PORT}`);
-});
+app.use(errorHandler);
+
+export default app;
