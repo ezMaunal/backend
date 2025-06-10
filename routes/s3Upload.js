@@ -4,6 +4,6 @@ import { uploadImage } from "../controllers/s3UploadController.js";
 
 const router = express.Router();
 
-router.post("/upload", upload.single("image"), uploadImage);
+router.post("/upload", upload.array("images"), uploadImage);
 
 export default router;
