@@ -8,6 +8,7 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: env.S3_BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
       const filename = `images/${uuidv4()}-${file.originalname}`;
       cb(null, filename);
