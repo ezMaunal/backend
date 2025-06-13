@@ -4,7 +4,7 @@ export const deleteManual = async (req, res, next) => {
   try {
     const { manualId } = req.params;
 
-    const manual = await Manual.findOneAndDelete({ manualId });
+    const manual = await Manual.findOne({ manualId });
 
     if (!manual) {
       const err = new Error("해당 매뉴얼을 찾을 수 없습니다.");
