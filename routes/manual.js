@@ -1,9 +1,9 @@
 import express from "express";
 import { createManual } from "../controllers/createManual.js";
-import upload from "../config/multer.js";
 import { updateManualName } from "../controllers/updateManualName.js";
-import { deleteManual } from "../controllers/deleteManual.js";
+import upload from "../config/multer.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
+import { deleteManual } from "../controllers/deleteManual.js";
 
 const router = express.Router();
 
