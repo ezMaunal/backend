@@ -45,6 +45,8 @@ export const kakaoLogin = async (req, res, next) => {
     const nickname = userData.properties?.nickname || `User_${kakaoId}`;
     const profileImage = userData.properties?.profile_image || null;
 
+    const refreshToken = uuidv4();
+
     let user = await User.findOne({ kakaoId });
     if (!user) {
       user = await User.create({
@@ -52,30 +54,35 @@ export const kakaoLogin = async (req, res, next) => {
         kakaoId,
         nickname,
         profileImage,
-        refreshToken: refresh_token,
+        kakaoAccessToken: access_token,
+        kakaoRefreshToken: refresh_token,
+        refreshToken: refreshToken,
       });
     } else {
-      user.refreshToken = refresh_token;
+      user.refreshToken = refreshToken;
+      user.kakaoAccessToken = access_token;
+      user.kakaoRefreshToken = refresh_token;
       await user.save();
     }
 
-    const accessToken = jwt.sign(
+    const jwtAccessToken = jwt.sign(
       { userId: user.userId, kakaoId: user.kakaoId },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN },
     );
 
-    res.cookie("refreshToken", refresh_token, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "Lax",
       path: "/",
+      maxAge: 14 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({
       success: true,
       message: "로그인 성공 및 회원가입이 완료되었습니다.",
-      token: accessToken,
+      token: jwtAccessToken,
       user: {
         userId: user.userId,
         nickname: user.nickname,

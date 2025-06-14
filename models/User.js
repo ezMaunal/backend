@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "#ff0000",
   },
-  jwtRefreshToken: {
+  refreshToken: {
     type: String,
     default: null,
   },
