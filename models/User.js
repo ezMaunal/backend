@@ -26,10 +26,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "#ff0000",
   },
-  refreshToken: {
-    type: String,
-    default: null,
-  },
   kakaoAccessToken: {
     type: String,
     default: null,
