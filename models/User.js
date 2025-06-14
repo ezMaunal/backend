@@ -26,6 +26,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "#ff0000",
   },
+  jwtRefreshToken: {
+    type: String,
+    default: null,
+  },
+  kakaoAccessToken: {
+    type: String,
+    default: null,
+  },
+  kakaoRefreshToken: {
+    type: String,
+    default: null,
+  },
 });
 
 const User = mongoose.model("User", userSchema);
