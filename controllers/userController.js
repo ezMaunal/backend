@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import env from "../config/env.js";
 
 export const getUserMe = async (req, res, next) => {
   try {
@@ -20,6 +21,34 @@ export const getUserMe = async (req, res, next) => {
         profileImage: user.profileImage,
         highlightColor: user.highlightColor,
       },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteUserMe = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+
+    const user = await User.findOneAndDelete({ userId });
+    if (!user) {
+      const err = new Error("사용자 정보를 찾을 수 없습니다.");
+      err.status = 404;
+
+      return next(err);
+    }
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "Lax",
+      path: "/",
+    });
+
+    res.json({
+      success: true,
+      message: "회원 탈퇴가 완료되었습니다."
     });
   } catch (err) {
     next(err);
