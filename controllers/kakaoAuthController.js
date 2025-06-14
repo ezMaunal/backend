@@ -127,3 +127,25 @@ export const refreshToken = async (req, res, next) => {
     next(err);
   }
 };
+
+export const kakaoLogout = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+
+    await User.updateOne({ userId }, { $unset: { refreshToken: "" }});
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "Lax",
+      path: "/",
+    });
+
+    res.json({
+      success: true,
+      message: "성공적으로 로그아웃되었습니다.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
