@@ -54,3 +54,39 @@ export const deleteUserMe = async (req, res, next) => {
     next(err);
   }
 };
+
+export const updateHighlightColor = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+    const { highlightColor } = req.body;
+
+    if (!highlightColor || typeof highlightColor !== "string") {
+      const err = new Error("highlightColor 값이 유효하지 않습니다.");
+      err.status = 400;
+
+      return next(err);
+    }
+
+    const user = await User.findOneAndUpdate(
+      { userId },
+      { highlightColor },
+      { new: true },
+    )
+
+    if (!user) {
+      const err = new Error("사용자 정보를 찾을 수 없습니다.");
+      err.status = 404;
+
+      return next(err);
+    }
+
+    res.json({
+      success: true,
+      data: {
+        highlightColor: user.highlightColor,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
