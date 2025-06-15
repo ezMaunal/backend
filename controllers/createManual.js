@@ -50,7 +50,7 @@ export const createManual = async (req, res, next) => {
       data: {
         manualId: manual.manualId,
         name: manual.name,
-        imageCount: steps.length,
+        imageCount: manual.steps.length,
         steps: manual.steps,
         createdAt: manual.createdAt,
       },
