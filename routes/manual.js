@@ -6,6 +6,7 @@ import { verifyToken } from "../middlewares/verifyToken.js";
 import { deleteManual } from "../controllers/deleteManual.js";
 import { updateStepText } from "../controllers/updateManualStepText.js";
 import { getManualList } from "../controllers/getManualList.js";
+import { getManual } from "../controllers/getManual.js";
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.patch("/manual/:manualId", updateManualName);
 router.delete("/manual/:manualId", deleteManual);
 router.patch("/manual/:manualId/images/:imageId", updateStepText);
 router.get("/manual_list", verifyToken, getManualList);
+router.get("/manual/:manualId", getManual);
 
 export default router;
