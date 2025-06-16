@@ -49,8 +49,9 @@ export const kakaoLogin = async (req, res, next) => {
 
     let user = await User.findOne({ kakaoId });
     if (!user) {
+      const newUserId = uuidv4();
       user = await User.create({
-        userId: uuidv4(),
+        userId: newUserId,
         kakaoId,
         nickname,
         profileImage,
