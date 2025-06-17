@@ -1,27 +1,23 @@
-import env from "../config/env.js";
-import jwt from "jsonwebtoken";
+import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
+import { verifyAccessToken } from "../utils/jwtUtil.js";
 
-const JWT_SECRET = env.JWT_SECRET;
 
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    const err = new Error("인증 정보가 유효하지 않습니다.");
-    err.status = 401;
-
-    return next(err);
+    return next(createError(MESSAGES.ERROR.AUTH_UNAUTHORIZED, 401));
   }
 
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = verifyAccessToken(token);
     req.user = decoded;
+
     next();
   } catch (err) {
-    err.status = 401;
-    err.message = "인증 정보가 유효하지 않습니다.";
     next(err);
   }
 };

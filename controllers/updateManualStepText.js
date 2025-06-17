@@ -1,4 +1,6 @@
 import Manual from "../models/Manual.js";
+import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
 
 export const updateStepText = async (req, res, next) => {
   try {
@@ -6,26 +8,17 @@ export const updateStepText = async (req, res, next) => {
     const { text } = req.body;
 
     if (!text || typeof text !== "string") {
-      const err = new Error("수정할 텍스트가 유효하지 않습니다.");
-      err.status = 400;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.STEP_TEXT_INVALID, 400));
     }
 
     const manual = await Manual.findOne({ manualId });
     if (!manual) {
-      const err = new Error("해당 manualId에 대한 매뉴얼이 존재하지 않습니다.");
-      err.status = 404;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.MANUAL_NOT_FOUND, 404));
     }
 
     const step = manual.steps.find((step) => step.imageId === imageId);
     if (!step) {
-      const err = new Error("해당 imageId에 대한 이미지가 존재하지 않습니다.");
-      err.status = 404;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.STEP_IMAGE_NOT_FOUND, 404));
     }
 
     step.text = text;

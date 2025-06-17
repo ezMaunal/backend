@@ -1,4 +1,6 @@
 import Manual from "../models/Manual.js";
+import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
 
 export const getManual = async (req, res, next) => {
   try {
@@ -6,15 +8,12 @@ export const getManual = async (req, res, next) => {
 
     const manual = await Manual.findOne({ manualId });
     if (!manual) {
-      const err = new Error("해당 manualId에 대한 매뉴얼이 존재하지 않습니다.");
-      err.status = 404;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.MANUAL_NOT_FOUND, 404));
     }
 
     res.json({
       success: true,
-      message: "매뉴얼을 성공적으로 조회했습니다.",
+      message: MESSAGES.SUCCESS.MANUAL_GET,
       data: {
         manualId: manual.manualId,
         name: manual.name,
