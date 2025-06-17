@@ -2,6 +2,10 @@ import env from "./config/env.js";
 import mongoose from "mongoose";
 import app from "./app.js";
 
+app.use((req, res, next) => {
+  next();
+});
+
 mongoose
   .connect(env.MONGODB_URL)
   .then(() => {
