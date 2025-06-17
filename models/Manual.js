@@ -37,18 +37,6 @@ const manualSchema = new mongoose.Schema(
       required: true,
     },
     steps: [stepSchema],
-    sharedToken: {
-      type: String,
-      default: null,
-    },
-    sharedAt: {
-      type: Date,
-      default: null,
-    },
-    shareUrl: {
-      type: String,
-      default: null,
-    },
   },
   {
     timestamps: true,
