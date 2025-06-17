@@ -18,7 +18,7 @@ export const updateStepText = async (req, res, next) => {
 
     const step = manual.steps.find((step) => step.imageId === imageId);
     if (!step) {
-      return next(createErro(MESSAGES.ERROR.STEP_IMAGE_NOT_FOUND, 404));
+      return next(createError(MESSAGES.ERROR.STEP_IMAGE_NOT_FOUND, 404));
     }
 
     step.text = text;

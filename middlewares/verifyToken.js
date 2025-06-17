@@ -1,9 +1,7 @@
-import env from "../config/env.js";
-import jwt from "jsonwebtoken";
 import { MESSAGES } from "../config/constants.js";
 import { createError } from "../utils/createError.js";
+import { verifyAccessToken } from "../utils/jwtUtil.js";
 
-const JWT_SECRET = env.JWT_SECRET;
 
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -15,7 +13,7 @@ export const verifyToken = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = verifyAccessToken(token);
     req.user = decoded;
 
     next();

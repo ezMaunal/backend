@@ -1,12 +1,9 @@
 import env from "../config/env.js";
-import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import User from "../models/User.js";
 import { MESSAGES } from "../config/constants.js";
 import { createError } from "../utils/createError.js";
-
-const JWT_SECRET = env.JWT_SECRET;
-const JWT_EXPIRES_IN = "1h";
+import { generateAccessToken } from "../utils/jwtUtil.js";
 
 export const kakaoLogin = async (req, res, next) => {
   try {
@@ -62,11 +59,10 @@ export const kakaoLogin = async (req, res, next) => {
       await user.save();
     }
 
-    const jwtAccessToken = jwt.sign(
-      { userId: user.userId, kakaoId: user.kakaoId },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN },
-    );
+    const jwtAccessToken = generateAccessToken({
+      userId: user.userId,
+      kakaoId: user.kakaoId,
+    });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -104,11 +100,10 @@ export const refreshToken = async (req, res, next) => {
       return next(createError(MESSAGES.ERROR.AUTH_TOKEN_INVALID, 401));
     }
 
-    const newAccessToken = jwt.sign(
-      { userId: user.userId, kakaoId: user.kakaoId },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN },
-    );
+    const newAccessToken = generateAccessToken({
+      userId: user.userId,
+      kakaoId: user.kakaoId,
+    });
 
     res.status(200).json({
       success: true,
