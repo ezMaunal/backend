@@ -1,5 +1,6 @@
 import Manual from "../models/Manual.js";
 import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
 
 export const getManual = async (req, res, next) => {
   try {
@@ -7,10 +8,7 @@ export const getManual = async (req, res, next) => {
 
     const manual = await Manual.findOne({ manualId });
     if (!manual) {
-      const err = new Error(MESSAGES.ERROR.MANUAL_NOT_FOUND);
-      err.status = 404;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.MANUAL_NOT_FOUND, 404));
     }
 
     res.json({

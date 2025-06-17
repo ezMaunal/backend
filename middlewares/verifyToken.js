@@ -1,6 +1,7 @@
 import env from "../config/env.js";
 import jwt from "jsonwebtoken";
 import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
 
 const JWT_SECRET = env.JWT_SECRET;
 
@@ -8,10 +9,7 @@ export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    const err = new Error(MESSAGES.ERROR.AUTH_UNAUTHORIZED);
-    err.status = 401;
-
-    return next(err);
+    return next(createError(MESSAGES.ERROR.AUTH_UNAUTHORIZED, 401));
   }
 
   const token = authHeader.split(" ")[1];

@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import env from "../config/env.js";
 import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
 
 export const getUserMe = async (req, res, next) => {
   try {
@@ -9,9 +10,7 @@ export const getUserMe = async (req, res, next) => {
     const user = await User.findOne({ userId });
 
     if (!user) {
-      const err = new Error(MESSAGES.ERROR.USER_NOT_FOUND);
-      err.status = 404;
-      return next(err);
+      return next(createError(MESSAGES.ERROR.USER_NOT_FOUND, 404));
     }
 
     res.status(200).json({
@@ -34,10 +33,7 @@ export const deleteUserMe = async (req, res, next) => {
 
     const user = await User.findOneAndDelete({ userId });
     if (!user) {
-      const err = new Error(MESSAGES.ERROR.USER_NOT_FOUND);
-      err.status = 404;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.USER_NOT_FOUND, 404));
     }
 
     res.clearCookie("refreshToken", {
@@ -62,10 +58,7 @@ export const updateHighlightColor = async (req, res, next) => {
     const { highlightColor } = req.body;
 
     if (!highlightColor || typeof highlightColor !== "string") {
-      const err = new Error(MESSAGES.ERROR.USER_HIGHLIGHT_COLOR_INVALID);
-      err.status = 400;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.USER_HIGHLIGHT_COLOR_INVALID, 400));
     }
 
     const user = await User.findOneAndUpdate(
@@ -75,10 +68,7 @@ export const updateHighlightColor = async (req, res, next) => {
     )
 
     if (!user) {
-      const err = new Error(MESSAGES.ERROR.USER_NOT_FOUND);
-      err.status = 404;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.USER_NOT_FOUND, 404));
     }
 
     res.json({

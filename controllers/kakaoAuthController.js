@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import User from "../models/User.js";
 import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
 
 const JWT_SECRET = env.JWT_SECRET;
 const JWT_EXPIRES_IN = "1h";
@@ -11,10 +12,7 @@ export const kakaoLogin = async (req, res, next) => {
   try {
     const { code } = req.body;
     if (!code) {
-      const err = new Error(MESSAGES.ERROR.AUTH_KAKAO_CODE_MISSING);
-      err.status = 400;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.AUTH_KAKAO_CODE_MISSING, 404));
     }
 
     const tokenRes = await fetch("https://kauth.kakao.com/oauth/token", {
@@ -31,10 +29,7 @@ export const kakaoLogin = async (req, res, next) => {
     const tokenData = await tokenRes.json();
     const { access_token, refresh_token } = tokenData;
     if (!access_token) {
-      const err = new Error(MESSAGES.ERROR.AUTH_KAKAO_FAILED);
-      err.status = 401;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.AUTH_KAKAO_FAILED, 401));
     }
 
     const userRes = await fetch("https://kapi.kakao.com/v2/user/me", {
@@ -101,18 +96,12 @@ export const refreshToken = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      const err = new Error(MESSAGES.ERROR.AUTH_TOKEN_INVALID);
-      err.status = 401;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.AUTH_TOKEN_INVALID, 401));
     }
 
     const user = await User.findOne({ refreshToken });
     if (!user) {
-      const err = new Error(MESSAGES.ERROR.AUTH_TOKEN_INVALID);
-      err.status = 401;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.AUTH_TOKEN_INVALID, 401));
     }
 
     const newAccessToken = jwt.sign(

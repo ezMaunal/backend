@@ -7,7 +7,7 @@ export const uploadImage = (req, res) => {
 
   const uploadedImageUrls = req.files.map((file) => file.location);
 
-  res.status(200).json({
+  res.json({
     message: MESSAGES.SUCCESS.IMAGE_UPLOAD,
     imageUrl: uploadedImageUrls,
   });

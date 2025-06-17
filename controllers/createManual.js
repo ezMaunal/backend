@@ -2,25 +2,21 @@ import Manual from "../models/Manual.js";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import { MESSAGES } from "../config/constants.js";
+import { createError } from "../utils/createError.js";
 
 export const createManual = async (req, res, next) => {
   try {
     const { userId } = req.user;
 
     if (!req.files || req.files.length === 0) {
-      const err = new Error(MESSAGES.ERROR.FILE_REQUIRED);
-      err.status = 400;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.FILE_REQUIRED, 400));
     }
 
     let texts = req.body.text;
     if (!texts) {
-      const err = new Error(MESSAGES.ERROR.STEP_TEXT_REQUIRED);
-      err.status = 400;
-
-      return next(err);
+      return next(createError(MESSAGES.ERROR.STEP_TEXT_REQUIRED, 400));
     }
+
     if (!Array.isArray(texts)) texts = [texts];
 
     const today = dayjs().format("YYYYMMDD");
