@@ -2,6 +2,7 @@ import env from "../config/env.js";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import User from "../models/User.js";
+import { MESSAGES } from "../config/constants.js";
 
 const JWT_SECRET = env.JWT_SECRET;
 const JWT_EXPIRES_IN = "1h";
@@ -10,7 +11,7 @@ export const kakaoLogin = async (req, res, next) => {
   try {
     const { code } = req.body;
     if (!code) {
-      const err = new Error("카카오 인가 코드가 없습니다.");
+      const err = new Error(MESSAGES.ERROR.AUTH_KAKAO_CODE_MISSING);
       err.status = 400;
 
       return next(err);
@@ -30,7 +31,7 @@ export const kakaoLogin = async (req, res, next) => {
     const tokenData = await tokenRes.json();
     const { access_token, refresh_token } = tokenData;
     if (!access_token) {
-      const err = new Error("카카오 로그인 인증에 실패했습니다.");
+      const err = new Error(MESSAGES.ERROR.AUTH_KAKAO_FAILED);
       err.status = 401;
 
       return next(err);
@@ -82,7 +83,7 @@ export const kakaoLogin = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "로그인 성공 및 회원가입이 완료되었습니다.",
+      message: MESSAGES.SUCCESS.AUTH_LOGIN,
       token: jwtAccessToken,
       user: {
         userId: user.userId,
@@ -100,7 +101,7 @@ export const refreshToken = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      const err = new Error("유효하지 않거나 만료된 토큰입니다.");
+      const err = new Error(MESSAGES.ERROR.AUTH_TOKEN_INVALID);
       err.status = 401;
 
       return next(err);
@@ -108,7 +109,7 @@ export const refreshToken = async (req, res, next) => {
 
     const user = await User.findOne({ refreshToken });
     if (!user) {
-      const err = new Error("유효하지 않거나 만료된 토큰입니다.");
+      const err = new Error(MESSAGES.ERROR.AUTH_TOKEN_INVALID);
       err.status = 401;
 
       return next(err);
@@ -144,7 +145,7 @@ export const kakaoLogout = async (req, res, next) => {
 
     res.json({
       success: true,
-      message: "성공적으로 로그아웃되었습니다.",
+      message: MESSAGES.SUCCESS.AUTH_LOGOUT,
     });
   } catch (err) {
     next(err);

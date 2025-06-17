@@ -1,13 +1,14 @@
 import Manual from "../models/Manual.js";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
+import { MESSAGES } from "../config/constants.js";
 
 export const createManual = async (req, res, next) => {
   try {
     const { userId } = req.user;
 
     if (!req.files || req.files.length === 0) {
-      const err = new Error("파일이 업로드되지 않았습니다.");
+      const err = new Error(MESSAGES.ERROR.FILE_REQUIRED);
       err.status = 400;
 
       return next(err);
@@ -15,7 +16,7 @@ export const createManual = async (req, res, next) => {
 
     let texts = req.body.text;
     if (!texts) {
-      const err = new Error("단계별 안내 텍스트가 비어 있습니다.");
+      const err = new Error(MESSAGES.ERROR.STEP_TEXT_REQUIRED);
       err.status = 400;
 
       return next(err);

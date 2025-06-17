@@ -1,4 +1,5 @@
 import Manual from "../models/Manual.js";
+import { MESSAGES } from "../config/constants.js";
 
 export const updateManualName = async (req, res, next) => {
   try {
@@ -6,7 +7,7 @@ export const updateManualName = async (req, res, next) => {
     const { name } = req.body;
 
     if (!name) {
-      const err = new Error("수정할 제목이 없습니다.");
+      const err = new Error(MESSAGES.ERROR.MANUAL_NAME_REQUIRED);
       err.status = 400;
 
       return next(err);
@@ -19,7 +20,7 @@ export const updateManualName = async (req, res, next) => {
     );
 
     if (!manual) {
-      const err = new Error("해당 manualId에 대한 매뉴얼이 존재하지 않습니다.");
+      const err = new Error(MESSAGES.ERROR.MANUAL_NOT_FOUND);
       err.status = 404;
 
       return next(err);
