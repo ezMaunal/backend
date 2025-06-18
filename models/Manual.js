@@ -8,7 +8,7 @@ const stepSchema = new mongoose.Schema(
     },
     text: {
       type: String,
-      required: true,
+      default: "",
     },
     url: {
       type: String,
