@@ -13,10 +13,6 @@ export const createManual = async (req, res, next) => {
     }
 
     let texts = req.body.text;
-    if (!texts) {
-      return next(createError(MESSAGES.ERROR.STEP_TEXT_REQUIRED, 400));
-    }
-
     if (!Array.isArray(texts)) texts = [texts];
 
     const today = dayjs().format("YYYYMMDD");
